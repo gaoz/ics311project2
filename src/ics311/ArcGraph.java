@@ -126,17 +126,13 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                             attributeTable.put(tokens[i],tokens2[i]);
                         }
                         Data data = (Data)attributeTable;
+                        
                     String source = tokens2[0];
                     String destination = tokens2[1];
                     Arc arc = new Arc(verticList.get(source), verticList.get(destination), weight, data);
-//                    ArrayList<Key> key =new ArrayList<Key>();
-//                    key.add((Key)verticList.get(source).key);
-//                    key.add((Key)verticList.get(destination).key);
-                    Key dkey  = (Key)verticList.get(destination).key;
-                    Key skey  = (Key)verticList.get(destination).key;
-                    //Key key = (Key)(tokens2[0]+tokens2[1]);
-                    verticList.get(source).outAdjList.put(dkey, arc);
-                    verticList.get(source).inAdjList.put(skey, arc);
+                    Key key  = (Key)verticList.get(destination).key;
+                    verticList.get(source).outAdjList.put(key, arc);
+                    verticList.get(source).inAdjList.put(key, arc);
                     
                   
                 }
@@ -322,7 +318,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                        Arc arc = (Arc)i.nextElement();
                       ArrayList<Key> ak = new ArrayList<Key>();
                       ak.add((Key)arc.source.key);
-                      ak.add((Key)arc.destination.key);
+                      //ak.add((Key)arc.destination.key);
                       arrayList.add(ak);
                 }
 		return arrayList.iterator();
@@ -341,9 +337,25 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                 while(i.hasMoreElements()) {
                        Arc arc = (Arc)i.nextElement();
                        ArrayList<Key> ak = new ArrayList<Key>();
-                       ak.add((Key)arc.source.key);
+                       //ak.add((Key)arc.source.key);
                        ak.add((Key)arc.destination.key);
                        arrayList.add(ak);
+                }
+		return arrayList.iterator();
+	}
+
+	public Iterator<Key> allAdjacentVertices(Key vertexKey) {
+            
+		ArrayList<Key> arrayList = new ArrayList<Key>();
+                Enumeration i = verticList.get(vertexKey).outAdjList.elements();
+                while(i.hasMoreElements()) {
+                       Arc arc = (Arc)i.nextElement();
+                       arrayList.add((Key)arc.destination.key);
+                }
+                Enumeration ii = verticList.get(vertexKey).inAdjList.elements();
+                while(i.hasMoreElements()) {
+                       Arc arc = (Arc)i.nextElement();
+                       arrayList.add((Key)arc.source.key);
                 }
 		return arrayList.iterator();
 	}
@@ -737,7 +749,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             Collections.reverse(path);
             return path;
         }
-        public void test(){
+        public String diameter(){
             this.computePaths((Key)verticList.elements().nextElement().key);
             Double diameter = Double.MIN_VALUE;
             
@@ -750,15 +762,15 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                         diameter=v.minDistance;
                     }
                 }
-                System.out.println("Distance to " + v.key + ": " + v.minDistance);
+                //System.out.println("Distance to " + v.key + ": " + v.minDistance);
                 //List<Vertex<Key,Data>> path = getShortestPathTo(v);
 //                for(Vertex<Key,Data> a : path){
 //                    System.out.print("  ShortestPathFrom:" + a.key);
 //                }
                 //System.out.println("  --- done");
             }
-            System.out.println("Diameter:"+diameter);
-            
+            //System.out.println("Diameter:"+diameter);
+            return new DecimalFormat("#.##").format(diameter);
         }
         public void averagePathLength(){
             Double avg = 0.;
@@ -774,15 +786,17 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             }
             
             avg = a*w;
-            System.out.println("Averge Path Length: "+avg);
+            //System.out.println("Averge Path Length: "+avg);
         }
         public String graphDensity(){
              double E = (double)this.arcCount(); 
              double V = (double)this.vertexCount();
              double f = 2*(E/(V * (V-1)));
              f = f/2;
-             return new DecimalFormat("#.##").format(f);
+             return new DecimalFormat("#.###").format(f);
         }
+        
+        
 //         public int diameter()
 //
 //        {
