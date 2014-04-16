@@ -781,7 +781,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
              double V = (double)this.vertexCount();
              double f = 2*(E/(V * (V-1)));
              f = f/2;
-             return new DecimalFormat("#.##").format(f);
+             return new DecimalFormat("#.###").format(f);
         }
 //         public int diameter()
 //
