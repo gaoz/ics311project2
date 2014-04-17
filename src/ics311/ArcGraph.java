@@ -63,81 +63,95 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
         private Hashtable<Key, Vertex> verticList;
         private boolean isTransposedGraphy;
         
-        public ArcGraph() throws FileNotFoundException {
+        public ArcGraph()  {
+            
+           isTransposedGraphy = false;
+           verticList = new Hashtable<Key, Vertex>(); 
+        }
+        
+        public ArcGraph(String filename)  {
             
            isTransposedGraphy = false;
            verticList = new Hashtable<Key, Vertex>(); 
 
            String temp=""; 
-           Scanner sc = new Scanner(new File("SCC-Test.vna"));
-          // Scanner sc = new Scanner(new File("political-blogs.vna"));
+           Scanner sc=null;
+           File f = new File("SCC-Test.vna");
+           try{
+                sc = new Scanner(f);
+                
+           
+          //Scanner sc = new Scanner(new File("political-blogs.vna"));
           //Scanner sc = new Scanner(new File("celegansneural.vna"));
           //Scanner sc = new Scanner(new File("test.vna"));
            
-         
-           if(sc.nextLine().contains("*")){
-                
-               // ArrayList<String> labels = new ArrayList<String>();
-                String line = sc.nextLine();
-                String[] tokens = this.stringToArray(line);
-                
-            
-                while(sc.hasNext()){
-                   //  System.out.println("successfully readin file:"+ sc.hasNext());
-                    temp = sc.nextLine(); 
-                    if(temp.startsWith("*")){
-                        break;
-                    }else{
-                        // ADD VERTEX INTO MY LIST
-                        //String[] itr = temp.split(" "); 
-                        Hashtable<String, String> attributeTable = new Hashtable<String, String>();
-                        String[] tokens2 = this.stringToArray(temp);
-                        for(int i=1; i<tokens.length; i++){
-                            attributeTable.put(tokens[i],tokens2[i]);
-                            //System.out.println(tokens2[i]);
+           
+                if(sc.nextLine().contains("*")){
+
+                    // ArrayList<String> labels = new ArrayList<String>();
+                        String line = sc.nextLine();
+                        String[] tokens = this.stringToArray(line);
+
+
+                        while(sc.hasNext()){
+                        //  System.out.println("successfully readin file:"+ sc.hasNext());
+                            temp = sc.nextLine(); 
+                            if(temp.startsWith("*")){
+                                break;
+                            }else{
+                                // ADD VERTEX INTO MY LIST
+                                //String[] itr = temp.split(" "); 
+                                Hashtable<String, String> attributeTable = new Hashtable<String, String>();
+                                String[] tokens2 = this.stringToArray(temp);
+                                for(int i=1; i<tokens.length; i++){
+                                    attributeTable.put(tokens[i],tokens2[i]);
+                                    //System.out.println(tokens2[i]);
+                                }
+                                Data data = (Data)attributeTable;
+                                verticList.put((Key)tokens2[0], new Vertex(tokens2[0],data,new Hashtable<Key,Arc>(),new Hashtable<Key,Arc>()));
+                                //verticList.put((Key)itr[0], new Vertex(itr[0],new Hashtable<Key,Arc>()));
+                            }
+
                         }
-                        Data data = (Data)attributeTable;
-                        verticList.put((Key)tokens2[0], new Vertex(tokens2[0],data,new Hashtable<Key,Arc>(),new Hashtable<Key,Arc>()));
-                        //verticList.put((Key)itr[0], new Vertex(itr[0],new Hashtable<Key,Arc>()));
-                    }
-                    
                 }
-           }
-           if(temp.contains("*")){
-               
-                int num = 0;
-                String[] tokens = this.stringToArray(sc.nextLine());
-                for(int j=0; j<tokens.length; j++){
-                    if(tokens[j].contains("strength")){
-                        num= j;
-                    }
-                }
-                while(sc.hasNext()){
-                    String line = sc.nextLine(); 
-                    String[] tokens2 = this.stringToArray(line);
-                    
-                    Double weight=1.00;
-                    if(num>1){  // check whether there are weight in the input file
-                        weight = Double.parseDouble(tokens2[num]);
-                    }
-                     Hashtable<String, String> attributeTable = new Hashtable<String, String>();
-                        
-                        for(int i=2; i<tokens.length; i++){
-                            attributeTable.put(tokens[i],tokens2[i]);
+                if(temp.contains("*")){
+
+                        int num = 0;
+                        String[] tokens = this.stringToArray(sc.nextLine());
+                        for(int j=0; j<tokens.length; j++){
+                            if(tokens[j].contains("strength")){
+                                num= j;
+                            }
                         }
-                        Data data = (Data)attributeTable;
-                        
-                    String source = tokens2[0];
-                    String destination = tokens2[1];
-                    Arc arc = new Arc(verticList.get(source), verticList.get(destination), weight, data);
-                    Key key  = (Key)verticList.get(destination).key;
-                    verticList.get(source).outAdjList.put(key, arc);
-                    verticList.get(source).inAdjList.put(key, arc);
-                    
-                  
+                        while(sc.hasNext()){
+                            String line = sc.nextLine(); 
+                            String[] tokens2 = this.stringToArray(line);
+
+                            Double weight=1.00;
+                            if(num>1){  // check whether there are weight in the input file
+                                weight = Double.parseDouble(tokens2[num]);
+                            }
+                            Hashtable<String, String> attributeTable = new Hashtable<String, String>();
+
+                                for(int i=2; i<tokens.length; i++){
+                                    attributeTable.put(tokens[i],tokens2[i]);
+                                }
+                                Data data = (Data)attributeTable;
+
+                            String source = tokens2[0];
+                            String destination = tokens2[1];
+                            Arc arc = new Arc(verticList.get(source), verticList.get(destination), weight, data);
+                            Key key  = (Key)verticList.get(destination).key;
+                            verticList.get(source).outAdjList.put(key, arc);
+                            verticList.get(source).inAdjList.put(key, arc);
+
+
+                        }
                 }
+           }catch(FileNotFoundException e){
+                System.out.println("input file path: "+f.getAbsolutePath());
+                System.out.println("File not found");
            }
-          
          
         }// end of constructor
         private String[] stringToArray(String wordString) {
@@ -184,9 +198,9 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 //                System.out.println(" Strenght: " +a.get("strength"));
                 
                 
-                  String s = "37";
-                  String d = "32";
-                  System.out.println("check arcExit :"+s+"->"+d+"  "+ arcExists((Key)s,(Key)d));
+                  //String s = "37";
+                  //String d = "32";
+                  //System.out.println("check arcExit :"+s+"->"+d+"  "+ arcExists((Key)s,(Key)d));
         }
          
         public void printStaticReport(){
@@ -310,18 +324,28 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 	@Override
 	public Iterator<ArrayList<Key>> inAdjacentVertices(Key vertexKey) {
 		if(this.isTransposedGraphy){
-                    return outAdjacentVertices(vertexKey);
+                    ArrayList<ArrayList<Key>> arrayList = new ArrayList<ArrayList<Key>>();
+                    Enumeration i = verticList.get(vertexKey).outAdjList.elements();
+                    while(i.hasMoreElements()) {
+                        Arc arc = (Arc)i.nextElement();
+                        ArrayList<Key> ak = new ArrayList<Key>();
+                        //ak.add((Key)arc.source.key);
+                        ak.add((Key)arc.destination.key);
+                        arrayList.add(ak);
+                    }
+                    return arrayList.iterator();
+                }else{
+                    ArrayList<ArrayList<Key>> arrayList = new ArrayList<ArrayList<Key>>();
+                    Enumeration i = verticList.get(vertexKey).inAdjList.elements();
+                    while(i.hasMoreElements()) {
+                        Arc arc = (Arc)i.nextElement();
+                        ArrayList<Key> ak = new ArrayList<Key>();
+                        ak.add((Key)arc.source.key);
+                        //ak.add((Key)arc.destination.key);
+                        arrayList.add(ak);
+                    }
+                    return arrayList.iterator();
                 }
-		ArrayList<ArrayList<Key>> arrayList = new ArrayList<ArrayList<Key>>();
-                Enumeration i = verticList.get(vertexKey).inAdjList.elements();
-                while(i.hasMoreElements()) {
-                       Arc arc = (Arc)i.nextElement();
-                      ArrayList<Key> ak = new ArrayList<Key>();
-                      ak.add((Key)arc.source.key);
-                      //ak.add((Key)arc.destination.key);
-                      arrayList.add(ak);
-                }
-		return arrayList.iterator();
 	}
          /*
         arraylist index 0 store: source key that point to vertexKey(destination key)
@@ -330,34 +354,55 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 	@Override
 	public Iterator<ArrayList<Key>> outAdjacentVertices(Key vertexKey) {
 		if(this.isTransposedGraphy){
-                    return inAdjacentVertices(vertexKey);
+                    ArrayList<ArrayList<Key>> arrayList = new ArrayList<ArrayList<Key>>();
+                    Enumeration i = verticList.get(vertexKey).inAdjList.elements();
+                    while(i.hasMoreElements()) {
+                        Arc arc = (Arc)i.nextElement();
+                        ArrayList<Key> ak = new ArrayList<Key>();
+                        ak.add((Key)arc.source.key);
+                        //ak.add((Key)arc.destination.key);
+                        arrayList.add(ak);
+                    }
+                    return arrayList.iterator();
+                }else{
+                    ArrayList<ArrayList<Key>> arrayList = new ArrayList<ArrayList<Key>>();
+                    Enumeration i = verticList.get(vertexKey).outAdjList.elements();
+                    while(i.hasMoreElements()) {
+                        Arc arc = (Arc)i.nextElement();
+                        ArrayList<Key> ak = new ArrayList<Key>();
+                        //ak.add((Key)arc.source.key);
+                        ak.add((Key)arc.destination.key);
+                        arrayList.add(ak);
+                    }
+                    return arrayList.iterator();
                 }
-		ArrayList<ArrayList<Key>> arrayList = new ArrayList<ArrayList<Key>>();
-                Enumeration i = verticList.get(vertexKey).outAdjList.elements();
-                while(i.hasMoreElements()) {
-                       Arc arc = (Arc)i.nextElement();
-                       ArrayList<Key> ak = new ArrayList<Key>();
-                       //ak.add((Key)arc.source.key);
-                       ak.add((Key)arc.destination.key);
-                       arrayList.add(ak);
-                }
-		return arrayList.iterator();
 	}
 
 	public Iterator<Key> allAdjacentVertices(Key vertexKey) {
             
-		ArrayList<Key> arrayList = new ArrayList<Key>();
-                Enumeration i = verticList.get(vertexKey).outAdjList.elements();
-                while(i.hasMoreElements()) {
-                       Arc arc = (Arc)i.nextElement();
-                       arrayList.add((Key)arc.destination.key);
+                if(this.isTransposedGraphy){
+                    ArrayList<Key> arrayList = new ArrayList<Key>();
+                    Enumeration i = verticList.get(vertexKey).inAdjList.elements();
+                    while(i.hasMoreElements()) {
+                        Arc arc = (Arc)i.nextElement();
+                        arrayList.add((Key)arc.source.key);
+                    }
+                    return arrayList.iterator();
+                }else{
+                    ArrayList<Key> arrayList = new ArrayList<Key>();
+                    Enumeration i = verticList.get(vertexKey).outAdjList.elements();
+                    while(i.hasMoreElements()) {
+                        Arc arc = (Arc)i.nextElement();
+                        arrayList.add((Key)arc.destination.key);
+                    }
+                    return arrayList.iterator();
                 }
-                Enumeration ii = verticList.get(vertexKey).inAdjList.elements();
-                while(i.hasMoreElements()) {
-                       Arc arc = (Arc)i.nextElement();
-                       arrayList.add((Key)arc.source.key);
-                }
-		return arrayList.iterator();
+//                Enumeration ii = verticList.get(vertexKey).inAdjList.elements();
+//                while(i.hasMoreElements()) {
+//                       Arc arc = (Arc)i.nextElement();
+//                       arrayList.add((Key)arc.source.key);
+//                }
+		
 	}
 
 	@Override
