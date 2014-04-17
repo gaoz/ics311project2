@@ -23,6 +23,13 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+
+
+
+/*
+ * sub class Arc of Graph
+ * 
+ */
 class Arc<Key extends Comparable<Key>, Data>{
     
     public Vertex source;
@@ -30,6 +37,13 @@ class Arc<Key extends Comparable<Key>, Data>{
     public Number weight;
     public Data data;
     public Hashtable<Object,Object> annotation;
+    /*
+    * constructor
+    * @prameter s: vertice
+    * @prameter d: vertice
+    * @prameter w: any kind number
+    * @prameter w: any kind data
+    */
     public Arc(Vertex s,Vertex d, Number w, Data da){
        
         source = s;
@@ -40,7 +54,10 @@ class Arc<Key extends Comparable<Key>, Data>{
         
     }
 }
- 
+ /*
+ * sub class Vertex of Graph
+ * 
+ */
 class Vertex<Key extends Comparable<Key>, Data> {
     public Key key;
     public Data data;
@@ -49,6 +66,13 @@ class Vertex<Key extends Comparable<Key>, Data> {
     public Hashtable<Object,Object> annotation;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex<Key,Data> previous = null;
+    /*
+    * constructor
+    * @prameter s: vertice
+    * @prameter d: vertice
+    * @prameter w: any kind number
+    * @prameter w: any kind data
+    */
     Vertex(Key k,Data d, Hashtable<Key,Arc> outadjList, Hashtable<Key,Arc> inadjList) {
             this.key = k;
             this.data = d;
@@ -58,7 +82,9 @@ class Vertex<Key extends Comparable<Key>, Data> {
     }
 }
 
-
+/*
+* Class that represent the graph
+*/
 public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, Data> {
         private Hashtable<Key, Vertex> verticList;
         private boolean isTransposedGraphy;
@@ -68,92 +94,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
            isTransposedGraphy = false;
            verticList = new Hashtable<Key, Vertex>(); 
         }
-        
-        public ArcGraph(String filename)  {
-            
-           isTransposedGraphy = false;
-           verticList = new Hashtable<Key, Vertex>(); 
 
-           String temp=""; 
-           Scanner sc=null;
-           File f = new File("SCC-Test.vna");
-           try{
-                sc = new Scanner(f);
-                
-           
-          //Scanner sc = new Scanner(new File("political-blogs.vna"));
-          //Scanner sc = new Scanner(new File("celegansneural.vna"));
-          //Scanner sc = new Scanner(new File("test.vna"));
-           
-           
-                if(sc.nextLine().contains("*")){
-
-                    // ArrayList<String> labels = new ArrayList<String>();
-                        String line = sc.nextLine();
-                        String[] tokens = this.stringToArray(line);
-
-
-                        while(sc.hasNext()){
-                        //  System.out.println("successfully readin file:"+ sc.hasNext());
-                            temp = sc.nextLine(); 
-                            if(temp.startsWith("*")){
-                                break;
-                            }else{
-                                // ADD VERTEX INTO MY LIST
-                                //String[] itr = temp.split(" "); 
-                                Hashtable<String, String> attributeTable = new Hashtable<String, String>();
-                                String[] tokens2 = this.stringToArray(temp);
-                                for(int i=1; i<tokens.length; i++){
-                                    attributeTable.put(tokens[i],tokens2[i]);
-                                    //System.out.println(tokens2[i]);
-                                }
-                                Data data = (Data)attributeTable;
-                                verticList.put((Key)tokens2[0], new Vertex(tokens2[0],data,new Hashtable<Key,Arc>(),new Hashtable<Key,Arc>()));
-                                //verticList.put((Key)itr[0], new Vertex(itr[0],new Hashtable<Key,Arc>()));
-                            }
-
-                        }
-                }
-                if(temp.contains("*")){
-
-                        int num = 0;
-                        String[] tokens = this.stringToArray(sc.nextLine());
-                        for(int j=0; j<tokens.length; j++){
-                            if(tokens[j].contains("strength")){
-                                num= j;
-                            }
-                        }
-                        while(sc.hasNext()){
-                            String line = sc.nextLine(); 
-                            String[] tokens2 = this.stringToArray(line);
-
-                            Double weight=1.00;
-                            if(num>1){  // check whether there are weight in the input file
-                                weight = Double.parseDouble(tokens2[num]);
-                            }
-                            Hashtable<String, String> attributeTable = new Hashtable<String, String>();
-
-                                for(int i=2; i<tokens.length; i++){
-                                    attributeTable.put(tokens[i],tokens2[i]);
-                                }
-                                Data data = (Data)attributeTable;
-
-                            String source = tokens2[0];
-                            String destination = tokens2[1];
-                            Arc arc = new Arc(verticList.get(source), verticList.get(destination), weight, data);
-                            Key key  = (Key)verticList.get(destination).key;
-                            verticList.get(source).outAdjList.put(key, arc);
-                            verticList.get(source).inAdjList.put(key, arc);
-
-
-                        }
-                }
-           }catch(FileNotFoundException e){
-                System.out.println("input file path: "+f.getAbsolutePath());
-                System.out.println("File not found");
-           }
-         
-        }// end of constructor
         private String[] stringToArray(String wordString) {
             String[] result;
             int i = 0;     // index into the next empty array element
@@ -171,7 +112,11 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 
             return result;
         }
-        
+        /*
+        * this method is to print out all 
+        * out adjcent list arcs with a nice looking
+        * for debugging purpose
+        */
          public void print() {
                 
                 Enumeration iterator = verticList.elements();
@@ -190,32 +135,9 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                     }
                      System.out.print("\n");
                     // System.out.println(" Name: " + ((Hashtable<String, String>)temp.data).get("source"));
-                }
-//                String s = "10";
-//                String d = "11";
-//                Hashtable<String, String> a = ( Hashtable<String, String>)getArcData((Key)s,(Key)d);
-//                
-//                System.out.println(" Strenght: " +a.get("strength"));
-                
-                
-                  //String s = "37";
-                  //String d = "32";
-                  //System.out.println("check arcExit :"+s+"->"+d+"  "+ arcExists((Key)s,(Key)d));
-        }
+                }                
          
-        public void printStaticReport(){
-            System.out.println("Statistics:");
-            System.out.println( "vertexCount:"+vertexCount() +" arcCount" +arcCount());
-            System.out.println("   -    Minimum In & Out Degree:");
-            System.out.println("   -    Average Degree:"+ null);
-            System.out.println("   -    Maximum In & Out Degree: "+ null);
-            System.out.println("   -    Network Diameter:"+ null);
-            System.out.println("   -    Avg. Path Length:"+ null);
-            System.out.println("   -    Graph Density:"+ null);
-            System.out.println("   -    Weakly Connected Components:"+ null);
-            System.out.println("   -    Strongly Connected Components: "+ null);
-            System.out.println("   -    Modularity:"+ null);
-        }                              
+         }                             
          
 	@Override
 	public int vertexCount() {
@@ -377,7 +299,11 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                     return arrayList.iterator();
                 }
 	}
-
+         /*
+        * @parameter vertexKey: a key
+        * return: all the vertice that are adjacent to the key
+        * including in and out adjacent vertices
+        */
 	public Iterator<Key> allAdjacentVertices(Key vertexKey) {
             
                 if(this.isTransposedGraphy){
@@ -545,10 +471,13 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                     sourceKey = _sourceKey;
                     destinationKey  = _destinationKey;    
                 }
-                Data data = (Data)(Arc)((Vertex)verticList.get(sourceKey).outAdjList.get(destinationKey)).data;
+                Data data =null;
+               
+                //data = (Data)(Arc)((Vertex)verticList.get(sourceKey).outAdjList.get(destinationKey)).data;
                 
 		verticList.get(sourceKey).outAdjList.remove(destinationKey);
                 verticList.get(destinationKey).inAdjList.remove(sourceKey);
+                
 		return data;
 	}
 
@@ -694,7 +623,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 		return o; 
 	}
         
-        
+        /*
+        * @parameter vertexKey: a key
+        * return: the degree number
+        */
         public int minInDegree(){
             int min = Integer.MAX_VALUE;
             Enumeration iterator = verticList.elements();
@@ -707,6 +639,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             return min;
                 
         }
+        /*
+        * @parameter
+        * return: the degree number
+        */
         public int minOutDegree(){
             int min = Integer.MAX_VALUE;
             Enumeration iterator = verticList.elements();
@@ -718,6 +654,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             }
             return min;
         }
+        /*
+        * @parameter
+        * return: the degree number
+        */
         public int maxInDegree(){
             int max = Integer.MIN_VALUE;
             Enumeration iterator = verticList.elements();
@@ -730,6 +670,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             return max;
                 
         }
+        /*
+        * @parameter
+        * return: the degree number
+        */
         public int maxOutDegree(){
             int max = Integer.MIN_VALUE;
             Enumeration iterator = verticList.elements();
@@ -741,6 +685,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             }
             return max;
         }
+        /*
+        * @parameter: none
+        * return: the degree number as a string
+        */
         public String avergeDegree(){
             String averge = "0.00";
             Double ave=0.00;
@@ -754,93 +702,140 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             
             return averge;
         }
-//        public String networkDiameter(){
-//            this.
-//        }
-        public void computePaths(Key _source)
-        {
-            Vertex source = verticList.get(_source);
-            source.minDistance = 0.;
-            PriorityQueue<Key> vertexQueue = new PriorityQueue<Key>();
-            vertexQueue.add((Key)source.key);
-
-            while (!vertexQueue.isEmpty()) {
-                Vertex<Key,Data> u = verticList.get(vertexQueue.poll());
-
-                // Visit each edge exiting u
-                Enumeration e = u.outAdjList.elements();
-                while(e.hasMoreElements())
-                {   
-                    Arc a = (Arc)e.nextElement();
-                    Vertex v = (Vertex<Key,Data>)a.destination;
-                    double weight = (double)a.weight;
-                    double distanceThroughU = u.minDistance + weight;
-                    if (distanceThroughU < v.minDistance) {
-                        vertexQueue.remove(v);
-                        v.minDistance = distanceThroughU ;
-                        //v.previous = u;
-                        
-                        vertexQueue.add((Key)v.key);
-                    }
-                }
-            }
-        }
-
-        public List<Vertex<Key,Data>> getShortestPathTo(Vertex<Key,Data> target)
-        {
-            List<Vertex<Key,Data>> path = new ArrayList<Vertex<Key,Data>>();
-            for (Vertex<Key,Data> vertex = target; vertex != null; vertex = vertex.previous)
-                path.add(vertex);
-            Collections.reverse(path);
-            return path;
-        }
-        public String diameter(){
-            this.computePaths((Key)verticList.elements().nextElement().key);
-            Double diameter = Double.MIN_VALUE;
-            
-            for (Vertex<Key,Data> v : verticList.values())
-            {
-                if(v.minDistance!=Double.POSITIVE_INFINITY){
-                    
-                    if(v.minDistance>diameter){
-                        
-                        diameter=v.minDistance;
-                    }
-                }
-                //System.out.println("Distance to " + v.key + ": " + v.minDistance);
-                //List<Vertex<Key,Data>> path = getShortestPathTo(v);
-//                for(Vertex<Key,Data> a : path){
-//                    System.out.print("  ShortestPathFrom:" + a.key);
-//                }
-                //System.out.println("  --- done");
-            }
-            //System.out.println("Diameter:"+diameter);
-            return new DecimalFormat("#.##").format(diameter);
-        }
-        public void averagePathLength(){
-            Double avg = 0.;
-            Double v = (double)this.vertexCount();
-            Double a = 1/v*(v-1);
-            Double w = 0.;
-            Iterator i = this.arcs();
-            while(i.hasNext()){
-                Object o = i.next();
-                ArrayList<Key> k = (ArrayList<Key>)o;
-                w= (Double)this.getArcWeight(k.get(0), k.get(1));
-                
-            }
-            
-            avg = a*w;
-            //System.out.println("Averge Path Length: "+avg);
-        }
+        
+        /*
+        * @parameter: none
+        * return: the graph density number as a string
+        */
         public String graphDensity(){
              double E = (double)this.arcCount(); 
              double V = (double)this.vertexCount();
              double f = 2*(E/(V * (V-1)));
              f = f/2;
-             return new DecimalFormat("#.###").format(f);
+             return new DecimalFormat("#.########").format(f);
         }
+   
         
+
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///*
+//        * networkDiameter helper method
+//        * @parameter : key
+//        * return: none
+//        */
+//        public void computePaths(Key _source)
+//        {
+//            Vertex source = verticList.get(_source);
+//            source.minDistance = 0.;
+//            PriorityQueue<Key> vertexQueue = new PriorityQueue<Key>();
+//            vertexQueue.add((Key)source.key);
+//
+//            while (!vertexQueue.isEmpty()) {
+//                Vertex<Key,Data> u = verticList.get(vertexQueue.poll());
+//
+//                // Visit each edge exiting u
+//                Enumeration e = u.outAdjList.elements();
+//                while(e.hasMoreElements())
+//                {   
+//                    Arc a = (Arc)e.nextElement();
+//                    Vertex v = (Vertex<Key,Data>)a.destination;
+//                    double weight = (double)a.weight;
+//                    double distanceThroughU = u.minDistance + weight;
+//                    if (distanceThroughU < v.minDistance) {
+//                        vertexQueue.remove(v);
+//                        v.minDistance = distanceThroughU ;
+//                        //v.previous = u;
+//                        
+//                        vertexQueue.add((Key)v.key);
+//                    }
+//                }
+//            }
+//        }
+//        /*
+//        * networkDiameter helper method
+//        * @parameter : key
+//        * return: none
+//        */
+//        public List<Vertex<Key,Data>> getShortestPathTo(Vertex<Key,Data> target)
+//        {
+//            List<Vertex<Key,Data>> path = new ArrayList<Vertex<Key,Data>>();
+//            for (Vertex<Key,Data> vertex = target; vertex != null; vertex = vertex.previous)
+//                path.add(vertex);
+//            Collections.reverse(path);
+//            return path;
+//        }
+//        /*
+//        * networkDiameter helper method
+//        * @parameter : key
+//        * return: none
+//        */
+//        public String diameter(){
+//            this.computePaths((Key)verticList.elements().nextElement().key);
+//            Double diameter = Double.MIN_VALUE;
+//            
+//            for (Vertex<Key,Data> v : verticList.values())
+//            {
+//                if(v.minDistance!=Double.POSITIVE_INFINITY){
+//                    
+//                    if(v.minDistance>diameter){
+//                        
+//                        diameter=v.minDistance;
+//                    }
+//                }
+//                //System.out.println("Distance to " + v.key + ": " + v.minDistance);
+//                //List<Vertex<Key,Data>> path = getShortestPathTo(v);
+////                for(Vertex<Key,Data> a : path){
+////                    System.out.print("  ShortestPathFrom:" + a.key);
+////                }
+//                //System.out.println("  --- done");
+//            }
+//            //System.out.println("Diameter:"+diameter);
+//            return new DecimalFormat("#.##").format(diameter);
+//        }
+//        /*
+//        * networkDiameter helper method
+//        * @parameter : key
+//        * return: none
+//        */
+//        public void averagePathLength(){
+//            Double avg = 0.;
+//            Double v = (double)this.vertexCount();
+//            Double a = 1/v*(v-1);
+//            Double w = 0.;
+//            Iterator i = this.arcs();
+//            while(i.hasNext()){
+//                Object o = i.next();
+//                ArrayList<Key> k = (ArrayList<Key>)o;
+//                w= (Double)this.getArcWeight(k.get(0), k.get(1));
+//                
+//            }
+//            
+//            avg = a*w;
+//            //System.out.println("Averge Path Length: "+avg);
+//        }
+//        /*
+//        * 
+//        * @parameter : none
+//        * return: String of the density number 
+//        */
+        
+        // end of the Class
         
 //         public int diameter()
 //
@@ -899,5 +894,89 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 //                 return dist[], previous[];
 //            
 //        }
-
-}
+      
+//        public ArcGraph(String filename)  {
+//            
+//           isTransposedGraphy = false;
+//           verticList = new Hashtable<Key, Vertex>(); 
+//
+//           String temp=""; 
+//           Scanner sc=null;
+//           File f = new File("SCC-Test.vna");
+//           try{
+//                sc = new Scanner(f);
+//                
+//           
+//          //Scanner sc = new Scanner(new File("political-blogs.vna"));
+//          //Scanner sc = new Scanner(new File("celegansneural.vna"));
+//          //Scanner sc = new Scanner(new File("test.vna"));
+//           
+//           
+//                if(sc.nextLine().contains("*")){
+//
+//                    // ArrayList<String> labels = new ArrayList<String>();
+//                        String line = sc.nextLine();
+//                        String[] tokens = this.stringToArray(line);
+//
+//
+//                        while(sc.hasNext()){
+//                        //  System.out.println("successfully readin file:"+ sc.hasNext());
+//                            temp = sc.nextLine(); 
+//                            if(temp.startsWith("*")){
+//                                break;
+//                            }else{
+//                                // ADD VERTEX INTO MY LIST
+//                                //String[] itr = temp.split(" "); 
+//                                Hashtable<String, String> attributeTable = new Hashtable<String, String>();
+//                                String[] tokens2 = this.stringToArray(temp);
+//                                for(int i=1; i<tokens.length; i++){
+//                                    attributeTable.put(tokens[i],tokens2[i]);
+//                                    //System.out.println(tokens2[i]);
+//                                }
+//                                Data data = (Data)attributeTable;
+//                                verticList.put((Key)tokens2[0], new Vertex(tokens2[0],data,new Hashtable<Key,Arc>(),new Hashtable<Key,Arc>()));
+//                                //verticList.put((Key)itr[0], new Vertex(itr[0],new Hashtable<Key,Arc>()));
+//                            }
+//
+//                        }
+//                }
+//                if(temp.contains("*")){
+//
+//                        int num = 0;
+//                        String[] tokens = this.stringToArray(sc.nextLine());
+//                        for(int j=0; j<tokens.length; j++){
+//                            if(tokens[j].contains("strength")){
+//                                num= j;
+//                            }
+//                        }
+//                        while(sc.hasNext()){
+//                            String line = sc.nextLine(); 
+//                            String[] tokens2 = this.stringToArray(line);
+//
+//                            Double weight=1.00;
+//                            if(num>1){  // check whether there are weight in the input file
+//                                weight = Double.parseDouble(tokens2[num]);
+//                            }
+//                            Hashtable<String, String> attributeTable = new Hashtable<String, String>();
+//
+//                                for(int i=2; i<tokens.length; i++){
+//                                    attributeTable.put(tokens[i],tokens2[i]);
+//                                }
+//                                Data data = (Data)attributeTable;
+//
+//                            String source = tokens2[0];
+//                            String destination = tokens2[1];
+//                            Arc arc = new Arc(verticList.get(source), verticList.get(destination), weight, data);
+//                            Key key  = (Key)verticList.get(destination).key;
+//                            verticList.get(source).outAdjList.put(key, arc);
+//                            verticList.get(source).inAdjList.put(key, arc);
+//
+//
+//                        }
+//                }
+//           }catch(FileNotFoundException e){
+//                System.out.println("input file path: "+f.getAbsolutePath());
+//                System.out.println("File not found");
+//           }
+//         
+//        }// end of constructor
