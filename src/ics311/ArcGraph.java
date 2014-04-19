@@ -7,8 +7,11 @@
 package ics311;
 
 /**
- *
- * @author Vinson Gao
+ * This is the representation of the directed graph.
+ * 
+ * @author      Vinson Gao
+ * @version     1.0       
+ * @since       2014-04-18
  */
 
 import java.io.File;
@@ -25,10 +28,10 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 
-
-/*
- * sub class Arc of Graph
- * 
+/**
+ * This is the representation of the directed graph.
+ * Subclass of the Graph.
+ * It is used to create directed edge
  */
 class Arc<Key extends Comparable<Key>, Data>{
     
@@ -39,8 +42,8 @@ class Arc<Key extends Comparable<Key>, Data>{
     public Hashtable<Object,Object> annotation;
     /**
     * constructor
-    * @prameter s: vertice
-    * @prameter d: vertice
+    * @prameter s: edge source vertice
+    * @prameter d: edge destination vertice
     * @prameter w: any kind number
     * @prameter w: any kind data
     */
@@ -66,12 +69,13 @@ class Vertex<Key extends Comparable<Key>, Data> {
     public Hashtable<Object,Object> annotation;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex<Key,Data> previous = null;
+    
     /**
     * constructor
-    * @prameter s: vertice
-    * @prameter d: vertice
-    * @prameter w: any kind number
-    * @prameter w: any kind data
+    * @param k          hashtable key
+    * @param d          vertice properties 
+    * @param outadjList out goinog adjacent list of arc wrapped by a hashtable
+    * @param inadjList  in going adjacent list of arc wrapped by a hashtable
     */
     Vertex(Key k,Data d, Hashtable<Key,Arc> outadjList, Hashtable<Key,Arc> inadjList) {
             this.key = k;
@@ -83,34 +87,21 @@ class Vertex<Key extends Comparable<Key>, Data> {
 }
 
 /**
-* Class that represent the graph
-*/
+ * This is the main class of the directed graph representation. 
+ * 
+ */
 public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, Data> {
         private Hashtable<Key, Vertex> verticList;
         private boolean isTransposedGraphy;
-        
+        /**
+         * constructor takes no parameter;
+         * create the variable isTransposedGraphy to false
+         * create the verticList hashtable
+         */
         public ArcGraph()  {
             
            isTransposedGraphy = false;
            verticList = new Hashtable<Key, Vertex>(); 
-        }
-
-        private String[] stringToArray(String wordString) {
-            String[] result;
-            int i = 0;     // index into the next empty array element
-
-            //--- Declare and create a StringTokenizer
-            StringTokenizer st = new StringTokenizer(wordString);
-
-            //--- Create an array which will hold all the tokens.
-            result = new String[st.countTokens()];
-
-            //--- Loop, getting each of the tokens
-            while (st.hasMoreTokens()) {
-                result[i++] = st.nextToken();
-            }
-
-            return result;
         }
         /**
         * this method is to print out all 
@@ -239,10 +230,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                 }
 		return  verticList.get(vertexKey).outAdjList.size();
 	}
-        /**
-        arraylist index 0 store: source key that point to vertexKey(destination key) (return and use this one)
-        arraylist index 1 store: destination key
-        */
+
 	@Override
 	public Iterator<ArrayList<Key>> inAdjacentVertices(Key vertexKey) {
 		if(this.isTransposedGraphy){
@@ -269,10 +257,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                     return arrayList.iterator();
                 }
 	}
-         /**
-        arraylist index 0 store: source key that point to vertexKey(destination key)
-        arraylist index 1 store: destination key (return and use this one)
-        */
+
 	@Override
 	public Iterator<ArrayList<Key>> outAdjacentVertices(Key vertexKey) {
 		if(this.isTransposedGraphy){
@@ -300,9 +285,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                 }
 	}
          /**
-        * @parameter vertexKey: a key
-        * return: all the vertice that are adjacent to the key
-        * including in and out adjacent vertices
+        * return: all the vertice that are adjacent to the key 
+        * including in and out adjacent vertices with a search key
+        * @param vertexKey a search key
+        * @return   return all the vertice that are adjacent to the key
         */
 	public Iterator<Key> allAdjacentVertices(Key vertexKey) {
             
@@ -625,8 +611,8 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
         
         /**
          * return: the most biggest number of indegree arc that are all pointing to one vertice  
-        * @parameter vertexKey: a key
-        * 
+        *    
+        * @return    minimized InDegree number
         */
         public int minInDegree(){
             int min = Integer.MAX_VALUE;
@@ -641,8 +627,9 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                 
         }
         /**
-        * return: the degree number
-        * @parameter
+        * return:  the most small number of indegree arc that are all pointing to one vertice 
+        * 
+        * @return  the degree number
         * 
         */
         public int minOutDegree(){
@@ -657,8 +644,9 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             return min;
         }
         /**
-        * @parameter
-        * return: the degree number
+         * return  the most biggest number of indegree arc that are all pointing to one vertice 
+        * 
+        * @return the degree number
         */
         public int maxInDegree(){
             int max = Integer.MIN_VALUE;
@@ -673,8 +661,9 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                 
         }
         /**
-        * @parameter
-        * return: the degree number
+         * return  the most biggest number of outdegree arc that are all pointing to one vertice 
+        * 
+        * @return   the degree number
         */
         public int maxOutDegree(){
             int max = Integer.MIN_VALUE;
@@ -688,8 +677,9 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             return max;
         }
         /**
-        * @parameter: none
-        * return: the degree number as a string
+         * return  the average number of outdegree arc that are all pointing to one vertice 
+        *
+        * @return the degree number
         */
         public String avergeDegree(){
             String averge = "0.00";
@@ -706,8 +696,9 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
         }
         
         /**
-        * @parameter: none
-        * return: the graph density number as a string
+         * return  the computed number of graph density
+        * 
+        * @return the string number of the density
         */
         public String graphDensity(){
              double E = (double)this.arcCount(); 

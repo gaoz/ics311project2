@@ -13,12 +13,19 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- *
- * @author vin
+ * This is the analyze driver that report the data of
+ * the representation of the directed graph in a nice
+ * table.
+ * 
+ * @author      Vinson Gao
+ * @version     1.0       
+ * @since       2014-04-18
  */
 public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
 
     /**
+     * Main method that starts to run the program.
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
@@ -119,7 +126,7 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
                             
                         String source = tokens2[0];
                         String destination = tokens2[1];
-                       // Arc arc = new Arc(verticList.get(source), verticList.get(destination), weight, data);
+//                        Arc arc = new Arc(verticList.get(source), verticList.get(destination), weight, data);
 //                        Key key  = (Key)verticList.get(destination).key;
 //                        verticList.get(source).outAdjList.put(key, arc);
 //                        verticList.get(source).inAdjList.put(key, arc);
@@ -179,10 +186,10 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
         System.exit(0);
  
     }
-    /*
+    /**
      * helper method for iterating a string
-     * @parameter:wordString  input string
-     * @return: return tokens of splited sting from the input line
+     * @param wordString  wordString  input string
+     * @return            return tokens of splited sting from the input line
      */
     private static String[] stringToArray(String wordString) {
             String[] result;
@@ -201,7 +208,11 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
 
             return result;
     }
-        
+    /**
+     * compute the strongly connected component of the input directed graph
+     * @param g    directed graph
+     * @return     the total of the strongly connected component
+     */    
     public static int SCC(ArcGraph G){
         DFS(G);
         G.clearAnnotations("color");
@@ -214,6 +225,11 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
         return DFS2(G_prime);
         //print(s);
     }
+    
+    /**
+     * test method that used to debug the SCC
+     * @param s   a stack to be print out 
+     */
     public static void print(Stack s)
     {
         while(!s.isEmpty())
@@ -223,9 +239,11 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
         }
 
     }
-    /*
-     * Print out the SCC nodes in table
-    */
+    /**
+     * print out the table of strongly connected<br> 
+     * component which is required in ics311 project <br>
+     * 2 assignment
+     */
     public static void printSCC()
     {
          System.out.printf("%-5s",  "SCC" );
@@ -238,23 +256,18 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
             System.out.printf("%-5s",s.size());
             System.out.printf("%-35s",s);
             System.out.println("");
-//            
+            
         }
-//        for(ArrayList<String> tem: scclist){
-//            System.out.printf("%-5s","#");
-//            System.out.printf("%-5s",tem.size());
-//            System.out.printf("%-35s",tem);
-//            System.out.println("");
-//        }
-        
-        
 
     }
     public static int time;
     public static Stack s;
-    /*
-     * DFS search algorithm 
-     * @parameter:G   arcgraph object
+    /**
+     * DFS search algorithm <br>
+     * Step one to compute all the vertice 
+     * and handle the main outer loop
+     * 
+     * @param G   arcgraph object
      * @return: none
     */
     
@@ -279,11 +292,15 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
         }
         
     }
-     /*
-     * DFS hepler algorithm 
-     * @parameter:G   arcgraph object
-     * @parameter:u   Key for search
-     * @return: none
+     /**
+     * DFS hepler algorithm that visite all the vertices 
+     * under a leader vertices, and mark all the visited 
+     * vertices to black and put all the vertices into a
+     * stack that will used by DFS2 later
+     * 
+     * @param G   arcgraph object
+     * @param u   Key for search
+     * 
     */
     
      public static void DFS_VISIT(ArcGraph G, String u){
@@ -308,10 +325,17 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
        
     }
     public static int largestSCC;
-    /*
+    /**
      * modified DFS algorithm which is a part of the SCC algorithm
-     * @parameter:G   arcgraph object
-     * @return: none
+     * that perform another DFS search after the tranposed graph with
+     * the order of the vertice stack, it the scc will come out eventually
+     * in this method it will will compute the scc number by counting 
+     * the white vertices inside the main loop, and also it will computer
+     * largest scc and return it.
+     *
+     * 
+     * @param G   arcgraph object
+     * @return  the total number of strong connected components
     */
     public static int DFS2(ArcGraph G){
         int numberSCC=0;
@@ -351,11 +375,14 @@ public class AnalyzeGraph <Key extends Comparable<Key>, Data>{
     }
     public static ArrayList<ArrayList<String>> scclist;
     public static ArrayList<String> temp;
-    /*
-     * DFS2 hepler algorithm 
-     * @parameter:G   arcgraph object
-     * @parameter:u   Key for search
-     * @return: none
+    /**
+     * DFS2 hepler algorithm that visit all the vertices inside a scc
+     * and mark them black and add all those scc vertices into a arraylist
+     * that is used to print out the scc table later.
+     * 
+     * @param G   arcgraph object
+     * @param u   Key for search
+     * 
     */
     public static void DFS_VISIT2(ArcGraph G, String u){
         time = time+1;

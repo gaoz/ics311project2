@@ -13,12 +13,19 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- *
- * @author vin
+ * This is the test driver that help developer to 
+ * debug and test the graph functions.
+ * 
+ * 
+ * @author      Vinson Gao
+ * @version     1.0       
+ * @since       2014-04-18
  */
 public class TestGraphADT <Key extends Comparable<Key>, Data>{
 
     /**
+     * main method that starts to run the program 
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) 
@@ -30,7 +37,7 @@ public class TestGraphADT <Key extends Comparable<Key>, Data>{
         System.out.println("---------------------------------------------");
         System.out.println("Welcome to Vinson Gao's Graph Testing");
         System.out.println("Testing..... ");
-        
+        //print out what i gonna input into the graph
         System.out.println("inserts: c");
         System.out.println("inserts: g");
         System.out.println("inserts: f");
@@ -53,7 +60,7 @@ public class TestGraphADT <Key extends Comparable<Key>, Data>{
         System.out.println("inserts arc: a->b  weight:1");
         
 
-        
+        // input nodes into the ArcGraph object
         graph.insertVertex("c");
         graph.insertVertex("g");
         graph.insertVertex("f");
@@ -77,6 +84,8 @@ public class TestGraphADT <Key extends Comparable<Key>, Data>{
         graph.insertArc("g", "h");
         graph.insertArc("h", "h");
         System.out.println("");
+        
+        // insert arc weight
         graph.setArcWeight("a", "b", 1.0);
         graph.setArcWeight("e", "a", 1.0);
         graph.setArcWeight("e", "f", 1.0);
@@ -95,12 +104,15 @@ public class TestGraphADT <Key extends Comparable<Key>, Data>{
         System.out.println("Grahic Arc inserted");
         graph.print();
         
+        // start to test my methods
         System.out.println("Method Checking......");
         System.out.println("");
         String g = "g";
         String e = "e";
         String a = "a";
         String h = "h";
+        
+        //test insertion method
         System.out.println("check arcExit: "+e+"->"+a+"  "+ graph.arcExists(g,h));
         System.out.println("check vertexExit: "+g+"   "+graph.vertexExists(g));
         System.out.println("delete vertex: "+g);
@@ -116,7 +128,7 @@ public class TestGraphADT <Key extends Comparable<Key>, Data>{
         while(iii.hasNext())   {  System.out.print(iii.next()+",");}
         System.out.println("");
         
-        
+        // test adj list methods
         System.out.print("check inAdjacentVertices of b :  is/are ");
         Iterator i = graph.inAdjacentVertices("b");
         while(i.hasNext())   {  System.out.print(i.next());}
@@ -128,6 +140,7 @@ public class TestGraphADT <Key extends Comparable<Key>, Data>{
         while(ii.hasNext())   {  System.out.print(ii.next()+",");}
         System.out.println("");
         
+        // test annotation methods
         System.out.println("Insert a annotation of b: color = white ");
         graph.setAnnotation("b","color", "white");
         System.out.println("print the inserted annotation: "+graph.getAnnotation("b","color"));
