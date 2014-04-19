@@ -37,7 +37,7 @@ class Arc<Key extends Comparable<Key>, Data>{
     public Number weight;
     public Data data;
     public Hashtable<Object,Object> annotation;
-    /*
+    /**
     * constructor
     * @prameter s: vertice
     * @prameter d: vertice
@@ -54,7 +54,7 @@ class Arc<Key extends Comparable<Key>, Data>{
         
     }
 }
- /*
+ /**
  * sub class Vertex of Graph
  * 
  */
@@ -66,7 +66,7 @@ class Vertex<Key extends Comparable<Key>, Data> {
     public Hashtable<Object,Object> annotation;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex<Key,Data> previous = null;
-    /*
+    /**
     * constructor
     * @prameter s: vertice
     * @prameter d: vertice
@@ -82,7 +82,7 @@ class Vertex<Key extends Comparable<Key>, Data> {
     }
 }
 
-/*
+/**
 * Class that represent the graph
 */
 public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, Data> {
@@ -112,7 +112,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 
             return result;
         }
-        /*
+        /**
         * this method is to print out all 
         * out adjcent list arcs with a nice looking
         * for debugging purpose
@@ -239,7 +239,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                 }
 		return  verticList.get(vertexKey).outAdjList.size();
 	}
-        /*
+        /**
         arraylist index 0 store: source key that point to vertexKey(destination key) (return and use this one)
         arraylist index 1 store: destination key
         */
@@ -269,7 +269,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                     return arrayList.iterator();
                 }
 	}
-         /*
+         /**
         arraylist index 0 store: source key that point to vertexKey(destination key)
         arraylist index 1 store: destination key (return and use this one)
         */
@@ -299,7 +299,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
                     return arrayList.iterator();
                 }
 	}
-         /*
+         /**
         * @parameter vertexKey: a key
         * return: all the vertice that are adjacent to the key
         * including in and out adjacent vertices
@@ -623,9 +623,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
 		return o; 
 	}
         
-        /*
+        /**
+         * return: the most biggest number of indegree arc that are all pointing to one vertice  
         * @parameter vertexKey: a key
-        * return: the degree number
+        * 
         */
         public int minInDegree(){
             int min = Integer.MAX_VALUE;
@@ -639,9 +640,10 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             return min;
                 
         }
-        /*
-        * @parameter
+        /**
         * return: the degree number
+        * @parameter
+        * 
         */
         public int minOutDegree(){
             int min = Integer.MAX_VALUE;
@@ -654,7 +656,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             }
             return min;
         }
-        /*
+        /**
         * @parameter
         * return: the degree number
         */
@@ -670,7 +672,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             return max;
                 
         }
-        /*
+        /**
         * @parameter
         * return: the degree number
         */
@@ -685,7 +687,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             }
             return max;
         }
-        /*
+        /**
         * @parameter: none
         * return: the degree number as a string
         */
@@ -703,7 +705,7 @@ public class ArcGraph<Key extends Comparable<Key>, Data> implements Graph<Key, D
             return averge;
         }
         
-        /*
+        /**
         * @parameter: none
         * return: the graph density number as a string
         */
